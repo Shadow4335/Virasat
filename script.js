@@ -1,19 +1,20 @@
 const PRODUCTS = [
-  {id:'classic-sand',name:'Classic Sand',sub:'Textured Weave',cat:'Everyday',img:'assets/p-classic-sand.jpg',
+  {id:'classic-sand',price:3090,name:'Classic Sand',sub:'Textured Weave',cat:'Everyday',img:'assets/p-classic-sand.jpg',
    desc:'A refined sand-toned jacket in a tactile woven fabric with a mandarin collar, zip front and slanted welt pockets. The effortless everyday essential. Crafted in a cotton-linen blend with a fusing of lycra for comfortable stretch, and lined in silk acetate fabric.'},
-  {id:'heritage-bloom',name:'Heritage Bloom',sub:'Traditional Charm',cat:'Festive',img:'assets/p-heritage-bloom.jpg',
+  {id:'heritage-bloom',price:3140,name:'Heritage Bloom',sub:'Traditional Charm',cat:'Festive',img:'assets/p-heritage-bloom.jpg',
    desc:'Botanical motifs scattered across a warm fawn base — a nod to classic Indian block prints, tailored with a modern zip front. Crafted in a cotton-linen blend with a fusing of lycra for comfortable stretch, and lined in silk acetate fabric.'},
-  {id:'geometric-play',name:'Geometric Play',sub:'Modern Edge',cat:'Modern',img:'assets/p-geometric-play.jpg',
+  {id:'geometric-play',price:3020,name:'Geometric Play',sub:'Modern Edge',cat:'Modern',img:'assets/p-geometric-play.jpg',
    desc:'Deep charcoal with an asymmetric geometric embroidery line across the shoulder: contemporary pattern-play in a heritage silhouette. Crafted in a cotton-linen blend with a fusing of lycra for comfortable stretch, and lined in silk acetate fabric.'},
-  {id:'classic-stripes',name:'Classic Stripes',sub:'Clean & Contemporary',cat:'Everyday',img:'assets/p-classic-stripes.jpg',
+  {id:'classic-stripes',price:3030,name:'Classic Stripes',sub:'Clean & Contemporary',cat:'Everyday',img:'assets/p-classic-stripes.jpg',
    desc:'Fine pinstripes on an ivory ground with contrast black piping. Sharp and versatile, from office to evening. Crafted in a cotton-linen blend with a fusing of lycra for comfortable stretch, and lined in silk acetate fabric.'},
-  {id:'angrakha-inspired',name:'Angrakha Inspired',sub:'Tradition Reimagined',cat:'Festive',img:'assets/p-angrakha-inspired.jpg',
+  {id:'angrakha-inspired',price:3260,name:'Angrakha Inspired',sub:'Tradition Reimagined',cat:'Festive',img:'assets/p-angrakha-inspired.jpg',
    desc:'Deep teal with a gold-thread embroidered panel inspired by the Angrakha. Statement festive wear with a quiet, modern finish. Crafted in a cotton-linen blend with a fusing of lycra for comfortable stretch, and lined in silk acetate fabric.'},
-  {id:'ethnic-stripe',name:'Ethnic Stripe',sub:'Culture with Style',cat:'Festive',img:'assets/p-ethnic-stripe.jpg',
+  {id:'ethnic-stripe',price:3090,name:'Ethnic Stripe',sub:'Culture with Style',cat:'Festive',img:'assets/p-ethnic-stripe.jpg',
    desc:'Deep maroon with a woven ethnic border running down the front, finished with a mandarin collar and zip closure. Crafted in a cotton-linen blend with a fusing of lycra for comfortable stretch, and lined in silk acetate fabric.'},
-  {id:'jacquard-charm',name:'Jacquard Charm',sub:'Rich & Regal',cat:'Modern',img:'assets/p-jacquard-charm.jpg',
+  {id:'jacquard-charm',price:3440,name:'Jacquard Charm',sub:'Rich & Regal',cat:'Modern',img:'assets/p-jacquard-charm.jpg',
    desc:'Midnight-blue jacquard with a tonal paisley weave that catches the light. Crafted in a cotton-linen blend with a fusing of lycra for comfortable stretch, and lined in silk acetate fabric.'}
 ];
+const fmt=n=>'₹'+n.toLocaleString('en-IN');
 const SIZES=['S','M','L','XL','XXL'];
 const $=s=>document.querySelector(s);
 let cart=[];
@@ -48,7 +49,7 @@ function renderGrid(f='all'){
         ${p.alt?`<img class="alt" src="${p.alt}" alt="${p.name} alternate view" loading="lazy">`:''}
         <span class="quick">Quick View</span>
       </div>
-      <div class="card-info"><div><h3>${p.name}</h3><p>${p.sub}</p></div></div>
+      <div class="card-info"><div><h3>${p.name}</h3><p>${p.sub}</p></div><span class="price">${fmt(p.price)}</span></div>
     </article>`).join('');
   document.querySelectorAll('.card').forEach(c=>{
     const open=()=>openModal(c.dataset.id);
@@ -71,7 +72,7 @@ function openModal(id){
     <div class="modal-img"><img src="${p.img}" alt="${p.name}"></div>
     <div class="modal-body">
       <p class="eyebrow">${p.cat}</p>
-      <h2>${p.name}</h2><p class="sub">${p.sub}</p>
+      <h2>${p.name}</h2><span class="price">${fmt(p.price)}</span><p class="sub">${p.sub}</p>
       <p class="desc">${p.desc}</p>
       <span class="label">Select size</span>
       <div class="sizes">${SIZES.map(s=>`<button class="size" data-s="${s}">${s}</button>`).join('')}</div>
@@ -108,9 +109,9 @@ function update(){
       <img src="${p.img}" alt="${p.name}">
       <div><h4>${p.name}</h4><p class="meta">Size ${c.size}</p>
         <div class="qty"><button data-a="dec" data-i="${i}" aria-label="Decrease">−</button><span>${c.qty}</span><button data-a="inc" data-i="${i}" aria-label="Increase">+</button></div></div>
-      <div><button class="rm" data-a="rm" data-i="${i}">Remove</button></div>
+      <div><b class="price">${fmt(p.price*c.qty)}</b><button class="rm" data-a="rm" data-i="${i}">Remove</button></div>
     </div>`}).join('');
-  $('#subtotal').textContent=cart.reduce((a,c)=>a+c.qty,0)+' piece(s)';
+  $('#subtotal').textContent=fmt(cart.reduce((a,c)=>a+PRODUCTS.find(x=>x.id===c.id).price*c.qty,0));
 }
 $('#cartItems').onclick=e=>{
   const b=e.target.closest('button[data-a]');if(!b)return;
